@@ -1,48 +1,16 @@
 import {
-  SAVE_FILE,
-  LOAD_FILE,
-  VIEW_FILES,
-  COMPILE_FILE,
-  RUN_FILE,
-  SUCCESS_GLOBAL,
   ERROR_GLOBAL,
-  CLEAR_NOTIFICATIONS,
+  SUCCESS_GLOBAL,
+  CLEAR_NOTIFICATION,
+  AUTH_USER,
+  SIGN_OUT,
   SITE_LAYOUT,
 } from "../types";
 
-/*
- * FILES
- */
-
-export const saveFile = (file) => ({
-  type: SAVE_FILE,
-  payload: file,
-});
-
-export const loadFile = (file) => ({
-  type: LOAD_FILE,
-  payload: file,
-});
-
-export const viewFiles = (files) => ({
-  type: VIEW_FILES,
-  payload: files,
-});
-
-export const compileFile = (file) => ({
-  type: COMPILE_FILE,
-  payload: file,
-});
-
-export const runFile = (file) => ({
-  type: RUN_FILE,
-  payload: file,
-});
 
 /*
- * NOTIFICATIONS
+ * Notifications
  */
-
 export const errorGlobal = (msg) => ({
   type: ERROR_GLOBAL,
   payload: msg,
@@ -53,16 +21,28 @@ export const successGlobal = (msg) => ({
   payload: msg,
 });
 
-export const clearNotification = () => {
+export const clearNotifications = () => {
   return (dispatch) => {
     dispatch({
-      type: CLEAR_NOTIFICATIONS,
+      type: CLEAR_NOTIFICATION,
     });
   };
 };
 
 /*
- * SITE LAYOUT
+ * Users
+ */
+export const authUser = (user) => ({
+  type: AUTH_USER,
+  payload: user,
+});
+
+export const signOut = () => ({
+  type: SIGN_OUT,
+});
+
+/*
+ * Site
  */
 
 export const appLayout = (layout) => ({

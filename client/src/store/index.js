@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import appReducers from "./reducers";
 
@@ -10,7 +10,6 @@ const ReduxStore = () => {
     appReducers,
     composeEnhancers(applyMiddleware(thunk))
   );
-
   return store;
 };
 

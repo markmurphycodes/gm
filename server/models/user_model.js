@@ -5,19 +5,13 @@ const validator = require("validator");
 require("dotenv").config();
 
 const userSchema = mongoose.Schema({
-  email: {
+  alias: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Invalid email");
-      }
-    },
   },
-  password: {
+  pub_key: {
     type: String,
     required: true,
     trim: true,
@@ -27,20 +21,14 @@ const userSchema = mongoose.Schema({
     enum: ["user", "admin"],
     default: "user",
   },
-  firstname: {
-    type: String,
-    maxLength: 100,
-    trim: true,
-  },
-  lastname: {
-    type: String,
-    maxLength: 100,
-    trim: true,
-  },
-  date: {
+  time_created: {
     type: Date,
     default: Date.now,
   },
+  time_expired: {
+    type: Date,
+    default: Date.now()
+  }
 });
 
 userSchema.pre("save", async function (next) {
@@ -66,8 +54,8 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return match;
 };
 
-userSchema.statics.emailTaken = async function (email) {
-  const user = await this.findOne({ email });
+userSchema.statics.aliasTaken = async function (alias) {
+  const user = await this.findOne({ alias });
   return !!user;
 };
 

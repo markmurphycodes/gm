@@ -1,15 +1,12 @@
 import { combineReducers } from "redux";
-
-import files from "./fileReducers";
-import site from "./siteReducers";
-import gdb from "./gdbReducers";
-import notifications from "./notificationReducers";
+import users from "./users_reducer";
+import site from "./site_reducer";
+import notification from "./notification_reducer";
 
 const appReducers = combineReducers({
-  files,
+  users,
   site,
-  gdb,
-  notifications,
+  notification,
 });
 
 export default appReducers;

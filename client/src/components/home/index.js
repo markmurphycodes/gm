@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect } from "react";
+import { Grid } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
 
-import Loader from "../utils/loader";
+const initialSort = { sortBy: "_id", order: "desc", limit: 5, skip: 0 };
 
 const Home = () => {
 
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-      setLoading(false);
-  }, []);
-
   return (
-    <>
-      <Uploader />
-      <div>Home</div>
-      {loading ? <Loader /> : <div>Home</div>}
-    </>
+    <div>
+      HELLO
+    </div>
   );
 };
 

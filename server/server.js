@@ -1,9 +1,5 @@
 const express = require("express");
-const SocketService = require("./SocketService");
-const GDBSocketService = require("./GDBSocketService");
 const app = express();
-const server = require("http").Server(app);
-const gdbServer = require("http").Server(app);
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require("dotenv").config();
@@ -25,24 +21,7 @@ app.use(checkToken);
 app.use("/api/users", users);
 app.use("/api/files", files);
 
-const port = process.env.PORT || 3001;
+const port = process.env.DB_PORT || 27017;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-});
-
-const socketPort = 8080;
-
-server.listen(socketPort, () => {
-  console.log(`Server listening on port ${socketPort}`);
-  const socketService = new SocketService();
-
-  socketService.attachServer(server);
-});
-
-const gdbPort = 8081;
-
-gdbServer.listen(gdbPort, () => {
-  console.log(`GDB listening on port ${gdbPort}`);
-  const gdbSocketService = new GDBSocketService();
-  gdbSocketService.attachServer(gdbServer);
 });

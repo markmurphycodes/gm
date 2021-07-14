@@ -1,33 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
 
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 
 import Loader from "./components/utils/loader";
 // import GoogleFontLoader from "react-google-font-loader";
 import Header from "./components/navigation/header";
+import Home from "./components/home/index";
 import MainLayout from "./hoc/mainLayout";
-import BottomNav from "./components/navigation/bottom";
+import Auth from "./components/auth/index";
+import Dashboard from "./components/dashboard/index";
 
-import Home from "./components/home";
-import Synch from "./components/synch";
+import AuthGuard from "./hoc/authGuard";
+
+import { useDispatch, useSelector } from "react-redux";
+import { isAuthUser } from "./store/actions/user_actions";
 
 const Routes = () => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const users = useSelector((state) => state.users);
+
+  useEffect(() => {
+    dispatch(isAuthUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users.auth != null) {
+      setLoading(false);
+    }
+  }, [users]);
 
   return (
     <BrowserRouter>
-      <Container style={{ zIndex: "700" }}>
-        <Header style={{ zIndex: "710" }} />
-        {loading ? (
-          <Loader />
-        ) : (
+      <Header />
+      {loading ? (
+        <Loader />
+      ) : (
+        <MainLayout>
           <Switch>
-            <Route path="/synch" component={Synch} />
+            {/*<Route path="/session/:id" component={Session} /> */}
+            <Route path="/dashboard" component={AuthGuard(Dashboard)} />
+            <Route path="/auth" component={Auth} />
             <Route path="/" component={Home} />
           </Switch>
-        )}
-      </Container>
+        </MainLayout>
+      )}
     </BrowserRouter>
   );
 };

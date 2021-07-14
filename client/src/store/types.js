@@ -1,22 +1,21 @@
+
 /*
- * SITE
+ * Notifications
+ */
+
+export const ERROR_GLOBAL = "error_global";
+export const SUCCESS_GLOBAL = "success_global";
+export const CLEAR_NOTIFICATION = "clear_notifications";
+
+/*
+ * Users
+ */
+
+export const AUTH_USER = "auth_user";
+export const SIGN_OUT = "sign_out";
+
+/*
+ * Site
  */
 
 export const SITE_LAYOUT = "site_layout";
-
-/*
- * NOTIFICATIONS
- */
-
-export const SUCCESS_GLOBAL = "success_global";
-export const ERROR_GLOBAL = "error_global";
-export const CLEAR_NOTIFICATIONS = "clear_notifications";
-
-/*
- * FILES
- */
-
-export const SAVE_FILE = "save_file";
-export const LOAD_FILE = "load_file";
-export const COMPILE_FILE = "compile_file";
-export const RUN_FILE = "run_file";
