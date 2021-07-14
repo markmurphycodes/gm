@@ -31,19 +31,19 @@ const userSchema = mongoose.Schema({
   }
 });
 
-userSchema.pre("save", async function (next) {
-  let user = this;
-  if (user.isModified("password")) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(user.password, salt);
-    user.password = hash;
-  }
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   let user = this;
+//   if (user.isModified("password")) {
+//     const salt = await bcrypt.genSalt(10);
+//     const hash = await bcrypt.hash(user.password, salt);
+//     user.password = hash;
+//   }
+//   next();
+// });
 
 userSchema.methods.generateToken = function () {
   let user = this;
-  const userObj = { _id: user._id.toHexString(), email: user.email };
+  const userObj = { _id: user._id.toHexString(), pub_key: user.pub_key };
   const token = jwt.sign(userObj, process.env.DB_SECRET, { expiresIn: "1d" });
   return token;
 };

@@ -4,6 +4,8 @@ import {
   CLEAR_NOTIFICATION,
   AUTH_USER,
   SIGN_OUT,
+  CREATE_SESSION,
+  END_SESSION,
   SITE_LAYOUT,
 } from "../types";
 
@@ -39,6 +41,18 @@ export const authUser = (user) => ({
 
 export const signOut = () => ({
   type: SIGN_OUT,
+});
+
+/*
+ * Sessions
+ */
+export const authSession = (session) => ({
+  type: CREATE_SESSION,
+  payload: session,
+});
+
+export const endSession = () => ({
+  type: END_SESSION,
 });
 
 /*

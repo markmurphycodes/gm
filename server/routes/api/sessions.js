@@ -5,35 +5,32 @@ const { checkLoggedIn } = require("../../middleware/auth");
 const { grantAccess } = require("../../middleware/roles");
 
 // model
-const { User } = require("../../models/user_model");
+const { Session } = require("../../models/session_model");
 
 router.route("/register").post(async (req, res) => {
   try {
-    // ///1 check if email taken
-    // if (await User.emailTaken(req.body.email)) {
-    //   return res.status(400).json({ message: "Sorry email taken" });
-    // }
+    ///1 check if session is OK
+    //if (await Session.sessionExists(req.body._id)) {
+    //  return res.status(400).json({ message: "Error" });
+    //}
 
-    /// 2 creating the model ( hash password)
-    const user = new User({
+    /// Create the session
+    const session = new Session({
       alias: req.body.alias,
       pub_key: req.body.pub_key,
-      role: req.body.role
     });
 
     /// 3 generate token
-    const token = user.generateToken();
-    const doc = await user.save();
-
-    // 4 send email
+    const token = session.generateToken();
+    const doc = await session.save();
 
     // save...send token with cookie
-    res.cookie("x-access-token", token).status(200).send(getUserProps(doc));
+    res.cookie("x-access-token", token).status(200).send(getSessionProps(doc));
   } catch (error) {
     res.status(400).json({ 
-      route: "server/routes/api/users.js", 
-      message: "Error", 
-      error: error });
+        route: "server/routes/api/sessions.js", 
+        message: "Error", 
+        error: error });
   }
 });
 
@@ -136,8 +133,7 @@ router.route("/is_auth").get(checkLoggedIn, async (req, res) => {
 const getUserProps = (user) => {
   return {
     _id: user._id,
-    alias: user.alias,
-    role: user.role,
+    alias: user.alias
   };
 };
 

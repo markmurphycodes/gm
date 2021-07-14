@@ -15,6 +15,13 @@ export const AUTH_USER = "auth_user";
 export const SIGN_OUT = "sign_out";
 
 /*
+ * Sessions
+ */
+
+export const CREATE_SESSION = "create_session";
+export const END_SESSION = "end_session";
+
+/*
  * Site
  */
 

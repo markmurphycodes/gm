@@ -3,10 +3,9 @@ import { AUTH_USER, SIGN_OUT } from "../types";
 let DEFAULT_USER_STATE = {
   data: {
     _id: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-    role: null,
+    alias: null,
+    pub_key: null,
+
   },
   auth: null,
 };

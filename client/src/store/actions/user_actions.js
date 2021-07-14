@@ -12,10 +12,8 @@ export const registerUser = (values) => {
   return async (dispatch) => {
     try {
       const user = await axios.post("/api/users/register", {
-        email: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
+        alias: values.alias,
+        pub_key: values.pub_key
       });
 
       dispatch(users.authUser({ data: user.data, auth: true }));

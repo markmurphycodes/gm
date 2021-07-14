@@ -4,6 +4,7 @@ import * as Yup from "yup";
 
 import { TextField, Button, RadioGroup, Radio, FormControlLabel } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { registerSession } from "../../store/actions/session_actions";
 import { registerUser } from "../../store/actions/user_actions";
 
 const Register = (props) => {
@@ -25,7 +26,14 @@ const Register = (props) => {
     }),
     onSubmit: (values, { resetForm }) => {
       // TODO client-side encryption
-      dispatch(registerUser(values));
+
+      let user = registerUser({
+        alias: values.alias,
+        pub_key: values.pub_key
+      })
+
+      dispatch(registerUser(user));
+      dispatch(registerSession(values));
       resetForm();
     },
   });
