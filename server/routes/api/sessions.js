@@ -3,6 +3,8 @@ let router = express.Router();
 require("dotenv").config();
 const { checkLoggedIn } = require("../../middleware/auth");
 const { grantAccess } = require("../../middleware/roles");
+const nacl = require("tweetnacl");
+const util = require("tweetnacl-util");
 
 // model
 const { Session } = require("../../models/session_model");
@@ -14,11 +16,23 @@ router.route("/register").post(async (req, res) => {
     //  return res.status(400).json({ message: "Error" });
     //}
 
+    
+    const keysUnsigned = nacl.sign.keyPair();
+    
+    const uint8pub = util.decodeUTF8(JSON.stringify(keysUnsigned.publicKey));
+    const uint8priv = util.decodeUTF8(JSON.stringify(keysUnsigned.secretKey));
+    
+
     /// Create the session
     const session = new Session({
+      owner: req.body.owner,
       alias: req.body.alias,
-      pub_key: req.body.pub_key,
-    });
+      signed_message: req.body.signed_message,
+      session_length: req.body.session_length,
+      session_type: req.body.session_type,
+      session_pubKey: util.encodeBase64(uint8pub),
+      session_privKey: util.encodeBase64(uint8priv)
+    })
 
     /// 3 generate token
     const token = session.generateToken();
@@ -28,7 +42,7 @@ router.route("/register").post(async (req, res) => {
     res.cookie("x-access-token", token).status(200).send(getSessionProps(doc));
   } catch (error) {
     res.status(400).json({ 
-        route: "server/routes/api/sessions.js", 
+        route: "server/routes/api/sessions.js {REGISTER}", 
         message: "Error", 
         error: error });
   }

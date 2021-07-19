@@ -14,7 +14,6 @@ const userSchema = mongoose.Schema({
   pub_key: {
     type: String,
     required: true,
-    trim: true,
   },
   role: {
     type: String,

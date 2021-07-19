@@ -5,6 +5,17 @@ const validator = require("validator");
 require("dotenv").config();
 
 const sessionSchema = mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
+  },
+  alias: {
+    type: String,
+  },
+  signed_message: {
+    type: String,
+    required: true,
+  },
   users: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
@@ -26,7 +37,15 @@ const sessionSchema = mongoose.Schema({
   time_expired: {
     type: Date,
     default: Date.now()
-  }
+  },
+  session_pubKey: {
+    type: String,
+    required: true
+  },
+  session_privKey: {
+    type: String,
+    required: true
+  },
 });
 
 sessionSchema.statics.sessionExists = async function (id) {
@@ -34,9 +53,6 @@ sessionSchema.statics.sessionExists = async function (id) {
   return !!session;
 };
 
-sessionSchema.pre("save", async function(next) {
-  console.log(mongoose.connection.readyState)
-})
 
 // TODO make sure this token is ok to have and if it is, expire it in a timely manner
 sessionSchema.methods.generateToken = function () {

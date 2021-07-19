@@ -135,9 +135,7 @@ router.route("/is_auth").get(checkLoggedIn, async (req, res) => {
 
 const getUserProps = (user) => {
   return {
-    _id: user._id,
     alias: user.alias,
-    role: user.role,
   };
 };
 

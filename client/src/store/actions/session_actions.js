@@ -13,10 +13,12 @@ export const registerSession = (values) => {
   return async (dispatch) => {
     try {
       const session = await axios.post(`/api/sessions/register`, {
+        owner: values.owner,
         alias: values.alias,
+        signed_message: values.signed_message,
         pub_key: values.pub_key,
         session_length: values.session_length,
-        session_type: "exclusive"
+        session_type: values.session_type
       });
 
       dispatch(sessions.authSession({ data: session.data }));
