@@ -6,12 +6,13 @@ import {
   removeTokenCookie,
 } from "../../components/utils/tools";
 
+
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const registerSession = (values) => {
   return async (dispatch) => {
     try {
-      const session = await axios.post("/api/sessions/register", {
+      const session = await axios.post(`/api/sessions/register`, {
         alias: values.alias,
         pub_key: values.pub_key,
         session_length: values.session_length,

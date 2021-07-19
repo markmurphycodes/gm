@@ -6,14 +6,16 @@ import {
   removeTokenCookie,
 } from "../../components/utils/tools";
 
+
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const registerUser = (values) => {
   return async (dispatch) => {
     try {
-      const user = await axios.post("/api/users/register", {
+      const user = await axios.post(`http://localhost:5000/api/users/register`, {
         alias: values.alias,
-        pub_key: values.pub_key
+        pub_key: values.pub_key,
+        role: values.role
       });
 
       dispatch(users.authUser({ data: user.data, auth: true }));
