@@ -1,7 +1,7 @@
 const express = require("express");
 let router = express.Router();
 require("dotenv").config();
-const { checkLoggedIn } = require("../../middleware/auth");
+const { verifyUserSignature } = require("../../middleware/auth");
 const { grantAccess } = require("../../middleware/roles");
 
 // model
@@ -9,26 +9,18 @@ const { User } = require("../../models/user_model");
 
 router.route("/register").post(async (req, res) => {
   try {
-    // ///1 check if email taken
-    // if (await User.emailTaken(req.body.email)) {
-    //   return res.status(400).json({ message: "Sorry email taken" });
-    // }
 
-    /// 2 creating the model ( hash password)
     const user = new User({
       alias: req.body.alias,
       pub_key: req.body.pub_key,
       role: req.body.role
     });
 
-    /// 3 generate token
     const token = user.generateToken();
     const doc = await user.save();
 
-    // 4 send email
-
-    // save...send token with cookie
-    res.cookie("x-access-token", token).status(200).send(getUserProps(doc));
+    // No cookie for users, just fot the session
+    res.status(200).send(getUserProps(doc));
   } catch (error) {
     res.status(400).json({ 
       route: "server/routes/api/users.js", 
@@ -59,7 +51,7 @@ router.route("/signin").post(async (req, res) => {
 
 router
   .route("/profile")
-  .get(checkLoggedIn, grantAccess("readOwn", "profile"), async (req, res) => {
+  .get(verifyUserSignature, grantAccess("readOwn", "profile"), async (req, res) => {
     try {
       const permission = res.locals.permission;
       const user = await User.findById(req.user._id);
@@ -71,7 +63,7 @@ router
     }
   })
   .patch(
-    checkLoggedIn,
+    verifyUserSignature,
     grantAccess("updateOwn", "profile"),
     async (req, res) => {
       try {
@@ -98,7 +90,7 @@ router
 router
   .route("/update_email")
   .patch(
-    checkLoggedIn,
+    verifyUserSignature,
     grantAccess("updateOwn", "profile"),
     async (req, res) => {
       try {
@@ -129,7 +121,7 @@ router
     }
   );
 
-router.route("/is_auth").get(checkLoggedIn, async (req, res) => {
+router.route("/is_auth").get(verifyUserSignature, async (req, res) => {
   res.status(200).send(getUserProps(req.user));
 });
 

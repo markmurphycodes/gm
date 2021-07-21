@@ -30,6 +30,10 @@ const sessionSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Assets"
   },
+  session_length: {
+    type: Number,
+    required: true
+  },
   time_created: {
     type: Date,
     default: Date.now(),
@@ -56,9 +60,10 @@ sessionSchema.statics.sessionExists = async function (id) {
 
 // TODO make sure this token is ok to have and if it is, expire it in a timely manner
 sessionSchema.methods.generateToken = function () {
-  let user = this;
-  const sessionObj = { _id: user._id.toHexString(), pub_key: user.pub_key };
-  const token = jwt.sign(sessionObj, process.env.DB_SECRET, { expiresIn: "1d" });
+  let session = this;
+  const tte = this.session_length;
+  const sessionObj = { _id: session._id.toHexString(), pub_key: session.session_pubKey };
+  const token = jwt.sign(sessionObj, process.env.DB_SECRET, { expiresIn: `${tte}m` });
   return token;
 };
 

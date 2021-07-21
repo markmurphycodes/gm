@@ -1,7 +1,7 @@
 const express = require("express");
 let router = express.Router();
 require("dotenv").config();
-const { checkLoggedIn } = require("../../middleware/auth");
+const { verifyUserSignature } = require("../../middleware/auth");
 const { grantAccess } = require("../../middleware/roles");
 const nacl = require("tweetnacl");
 const util = require("tweetnacl-util");
@@ -34,8 +34,10 @@ router.route("/register").post(async (req, res) => {
       session_privKey: util.encodeBase64(uint8priv)
     })
 
-    /// 3 generate token
+    // Generate token
     const token = session.generateToken();
+
+    // Filter out fields that don't need to go to Redux
     const doc = await session.save();
 
     // save...send token with cookie
@@ -70,7 +72,7 @@ router.route("/signin").post(async (req, res) => {
 
 router
   .route("/profile")
-  .get(checkLoggedIn, grantAccess("readOwn", "profile"), async (req, res) => {
+  .get(verifyUserSignature, grantAccess("readOwn", "profile"), async (req, res) => {
     try {
       const permission = res.locals.permission;
       const user = await User.findById(req.user._id);
@@ -82,7 +84,7 @@ router
     }
   })
   .patch(
-    checkLoggedIn,
+    verifyUserSignature,
     grantAccess("updateOwn", "profile"),
     async (req, res) => {
       try {
@@ -109,7 +111,7 @@ router
 router
   .route("/update_email")
   .patch(
-    checkLoggedIn,
+    verifyUserSignature,
     grantAccess("updateOwn", "profile"),
     async (req, res) => {
       try {
@@ -140,7 +142,7 @@ router
     }
   );
 
-router.route("/is_auth").get(checkLoggedIn, async (req, res) => {
+router.route("/is_auth").get(verifyUserSignature, async (req, res) => {
   res.status(200).send(getUserProps(req.user));
 });
 

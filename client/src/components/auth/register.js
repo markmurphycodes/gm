@@ -28,6 +28,8 @@ const Register = (props) => {
       session_length: Yup.number().required("Must include session length"),
       session_type: Yup.string().required("Must include session type.")
     }),
+
+    // First, a user is created. A keypair is generated and a signed message consisting of their _id is sent to the session object
     onSubmit: (values, { resetForm }) => {
 
       alias = values.alias;
@@ -36,18 +38,20 @@ const Register = (props) => {
 
       keysUnsigned = sign.keyPair();
       const uint8pub = decodeUTF8(JSON.stringify(keysUnsigned.publicKey));
+      const uint8priv = decodeUTF8(JSON.stringify(keysUnsigned.secretKey));
 
+      // Server will have access to the public key, only the user will be able to access their private key
       const _user = {
         alias: alias,
         pub_key: encodeBase64(uint8pub),
         role: "admin"
       }
 
-      console.log(_user);
+      // Session storage for private key
+      // TODO this should probably be encrypted and the security should be looked into
+      sessionStorage.setItem("pk", encodeBase64(uint8priv));
 
       dispatch(registerUser(_user));
-
-      
 
       resetForm();
     },
@@ -62,7 +66,7 @@ const Register = (props) => {
   });
 
 
-  // Create the session once the user has been updated in Redux
+  // Create the session once the user has been updated in Redux. The user's private key is used to sign a message containing their _id.
   useEffect(() => {
     if(cur_user.data._id){
       const uintId = decodeUTF8(JSON.stringify(cur_user.data._id));
